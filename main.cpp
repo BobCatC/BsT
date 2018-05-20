@@ -34,7 +34,12 @@ int main(){
     bst.insert(19);
     bst.insert(18);
     bst.insert(14);
-    
+	
+	for(auto it : bst){
+		cout << it << ' ';
+	}
+	cout << endl;
+	
     cout << "Preorder REC:" << endl;
     bst.printPreorderDF(bst.getRoot());
     cout << endl << "Preorder my:" << endl;
@@ -42,7 +47,8 @@ int main(){
     for(auto itPreorderDF = bst.beginPreorderDF(); itPreorderDF != bst.end(); ++itPreorderDF){
         cout << *itPreorderDF << ' ';
     }
-    
+	
+	
     
     cout << endl << "Inorder REC" << endl;
     bst.printInorderDF(bst.getRoot());
@@ -73,7 +79,19 @@ int main(){
     }
     cout << endl;
     
-    
+	bst.clear();
+	bst.insert(1);
+	bst.remove(1);
+	bst.begin();
+	bst.beginBF();
+	bst.beginInorderDF();
+	bst.beginPostorderDF();
+	bst.beginPreorderDF();
+	bst.empty();
+	bst.size();
+	bst.find(1);
+	bst.getRoot();
+	
     return 0;
 }
 

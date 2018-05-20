@@ -1,9 +1,12 @@
 #ifndef CBsTTraversalIterators_h
 #define CBsTTraversalIterators_h
-/*
- 	It's inside class
- 	CBsT<value_type, comporator>
-*/
+
+/* 	 Always is included into CBsT.hpp
+ *	( inside class CBsT<type_name, comporator> )
+ */
+
+
+private:
 #define crt_node iterator_traversal::_crt
 
 class iterator_traversal{
@@ -14,13 +17,13 @@ protected:
 	typedef iterator_traversal self_type;
 	
 	bool next() {
-		if(_crt == nullptr)
-			return false;
-		findNext();
+		if(_crt != nullptr){
+			findNext();
+		}
 		return ( _crt != nullptr );
 	}
 	
-	void goNext() {
+	void tryNext() {
 		if(!_fIsAfterLastNode){
 			if(!next()){
 				_fIsAfterLastNode = true;
@@ -29,15 +32,22 @@ protected:
 	}
 	
 public:
-	iterator_traversal(CBsTNode* root) : _crt(root), _fIsAfterLastNode(root == nullptr) {}
-	
-	const value_type& getValue() const { return _crt->getValue(); }
+	iterator_traversal(CBsTNode* root) :
+	_crt(root),
+	_fIsAfterLastNode(root == nullptr) {}
 	
 	const value_type& operator*() { return _crt->getValue(); }
+	
+	/* 		For comparing widt CBsT.end() iterator		*/
 	bool operator==(const template_iterator<const value_type>& it) { return ( _fIsAfterLastNode && it.fIsEndIterator() ); }
 	bool operator!=(const template_iterator<const value_type>& it) { return !( *this == it ); }
+	
+	/* 		For comparing with other heirs of class "iterator_traversal"		*/
+	bool operator==(const iterator_traversal& it) { return ( (_fIsAfterLastNode && it._fIsAfterLastNode) || *_crt == *it._crt ); }
+	bool operator!=(const iterator_traversal& it) { return !( *this == it ); }
 };
 
+public:
 class iteratorPreorderDF : public iterator_traversal{
 private:
 	enum EInstruction{
@@ -93,12 +103,12 @@ public:
 	}
 	
 	self_type operator++() {
-		iterator_traversal::goNext();
+		iterator_traversal::tryNext();
 		return *this;
 	}
 	self_type operator++(int junk) {
 		self_type it = *this;
-		iterator_traversal::goNext();
+		iterator_traversal::tryNext();
 		return it;
 	}
 };
@@ -154,15 +164,16 @@ public:
 	typedef iteratorPostorderDF self_type;
 	iteratorPostorderDF(CBsTNode* root) : iterator_traversal(root) {
 		instruction = go_down_left;
-		findNext();
+		if(!iterator_traversal::_fIsAfterLastNode)
+			findNext();
 	}
 	self_type operator++() {
-		iterator_traversal::goNext();
+		iterator_traversal::tryNext();
 		return *this;
 	}
 	self_type operator++(int junk) {
 		self_type it = *this;
-		iterator_traversal::goNext();
+		iterator_traversal::tryNext();
 		return it;
 	}
 };
@@ -219,16 +230,17 @@ public:
 	typedef iteratorInorderDF self_type;
 	iteratorInorderDF(CBsTNode* root) : iterator_traversal(root) {
 		instruction = go_down_left;
-		findNext();
+		if(!iterator_traversal::_fIsAfterLastNode)
+			findNext();
 	}
 	
 	self_type operator++() {
-		iterator_traversal::goNext();
+		iterator_traversal::tryNext();
 		return *this;
 	}
 	self_type operator++(int junk) {
 		self_type it = *this;
-		iterator_traversal::goNext();
+		iterator_traversal::tryNext();
 		return it;
 	}
 };
@@ -274,16 +286,17 @@ public:
 	outputStack(secondStack),
 	iterator_traversal(root) {
 		inputStack.push(root);
-		findNext();
+		if(!iterator_traversal::_fIsAfterLastNode)
+			findNext();
 	}
 	
 	self_type operator++() {
-		iterator_traversal::goNext();
+		iterator_traversal::tryNext();
 		return *this;
 	}
 	self_type operator++(int junk) {
 		self_type it = *this;
-		iterator_traversal::goNext();
+		iterator_traversal::tryNext();
 		return it;
 	}
 };

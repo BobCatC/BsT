@@ -1,6 +1,10 @@
 #ifndef CBsTNode_h
 #define CBsTNode_h
 
+/* 	 Always is included into CBsT.hpp
+ *	( inside class CBsT<type_name, comporator> )
+ */
+
 class CBsTNode{
 public:
 	CBsTNode(const value_type& value,

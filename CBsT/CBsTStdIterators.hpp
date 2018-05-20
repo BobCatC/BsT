@@ -1,6 +1,10 @@
 #ifndef CBsTStdIterators_h
 #define CBsTStdIterators_h
 
+/* 	 Always is included into CBsT.hpp
+ *	( inside class CBsT<type_name, comporator> )
+ */
+
 template<class iterator_value_type>
 class template_iterator{
 protected:
@@ -10,36 +14,36 @@ protected:
 	bool _fIsPrevFirstNode;
 	
 	void findNext() {
-		if(_fIsAfterLastNode){
-			return;
-		}
-		if(_fIsPrevFirstNode){
-			_node = findMin(_root);
-			if(_node == nullptr){
-				_fIsAfterLastNode = true;
+		if(!_fIsAfterLastNode){
+			if(_fIsPrevFirstNode){
+				_node = findMin(_root);
+				if(_node == nullptr){
+					_fIsAfterLastNode = true;
+				}
+				_fIsPrevFirstNode = false;
 			}
-			_fIsPrevFirstNode = false;
-			return;
-		}
-		_node = findNextNode(_root, _node);
-		if(_node == nullptr){
-			_fIsAfterLastNode = true;
+			else{
+				_node = findNextNode(_root, _node);
+				if(_node == nullptr){
+					_fIsAfterLastNode = true;
+				}
+			}
 		}
 	}
 	void findPrev(){
-		if(_fIsPrevFirstNode){
-			return;
-		}
-		if(_fIsAfterLastNode){
-			_node = findMax(_root);
-			if(_node != nullptr){
-				_fIsAfterLastNode = false;
+		if(!_fIsPrevFirstNode){
+			if(_fIsAfterLastNode){
+				_node = findMax(_root);
+				if(_node != nullptr){
+					_fIsAfterLastNode = false;
+				}
 			}
-			return;
-		}
-		_node = findPrevNode(_root, _node);
-		if(_node == nullptr){
-			_fIsPrevFirstNode = true;
+			else{
+				_node = findPrevNode(_root, _node);
+				if(_node == nullptr){
+					_fIsPrevFirstNode = true;
+				}
+			}
 		}
 	}
 	
@@ -68,6 +72,7 @@ public:
 		if(_fIsPrevFirstNode ^ other._fIsPrevFirstNode ||
 		   _fIsAfterLastNode ^ other._fIsAfterLastNode)
 			return false;
+		
 		else return
 			(_fIsPrevFirstNode && other._fIsPrevFirstNode) ||
 			(_fIsAfterLastNode && other._fIsAfterLastNode) ||

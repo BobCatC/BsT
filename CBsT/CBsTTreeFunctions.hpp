@@ -1,6 +1,10 @@
 #ifndef CBsTTreeFunctions_hpp
 #define CBsTTreeFunctions_hpp
 
+/* 	 Always is included into CBsT.hpp
+ *	( inside class CBsT<type_name, comporator> )
+ */
+
 static CBsTNode* findMax(CBsT::CBsTNode *root) {
 	CBsTNode* crt = root;
 	if(crt != nullptr){
@@ -27,12 +31,11 @@ static CBsTNode* findNextNode(CBsTNode* root, CBsTNode* start){
 		crt = findMin(start->getRightChild());
 	}
 	else{
-		CBsTNode* crt = start->getParent();
+		crt = start->getParent();
 		while(crt != nullptr && start == crt->getRightChild()){
 			start = crt;
 			crt = crt->getParent();
 		}
-		return crt;
 	}
 	return crt;
 }
@@ -43,12 +46,11 @@ static CBsTNode* findPrevNode(CBsTNode* root, CBsTNode* start){
 		crt = findMax(start->getLeftChild());
 	}
 	else{
-		CBsTNode* crt = start->getParent();
+		crt = start->getParent();
 		while(crt != nullptr && start == crt->getLeftChild()){
 			start = crt;
 			crt = crt->getParent();
 		}
-		return crt;
 	}
 	return crt;
 }
@@ -56,48 +58,50 @@ static CBsTNode* findPrevNode(CBsTNode* root, CBsTNode* start){
 static CBsTNode* insertNode(CBsTNode* root, const value_type& value){
 	CBsTNode* crt;
 	CBsTNode* new_node = nullptr;
+	CBsTNode nodeValue(value); // created just for comparing *crt and value
 	crt = root;
-	CBsTNode nodeValue(value);
 	
 	if(crt == nullptr){
-		crt = new CBsTNode(value);
-		return crt;
+		// tree is empty
+		new_node = new CBsTNode(value);
 	}
-	
-	while(true){
-		if(nodeValue > *crt){
-			if(crt->fHasRightChild()){
-				crt = crt->getRightChild();
-				continue;
+	else{
+		while(true){
+			if(nodeValue > *crt){
+				if(crt->fHasRightChild()){
+					crt = crt->getRightChild();
+					continue;
+				}
+				else{
+					crt->setRightChild(new_node = new CBsTNode(value, crt));
+					break;
+				}
 			}
-			else{
-				crt->setRightChild(new_node = new CBsTNode(value, crt));
+			if(nodeValue < *crt){
+				if(crt->fHasLeftChild()){
+					crt = crt->getLeftChild();
+					continue;
+				}
+				else{
+					crt->setLeftChild(new_node = new CBsTNode(value, crt));
+					break;
+				}
+			}
+			if(nodeValue == *crt){
+				new_node = nullptr;
 				break;
 			}
-		}
-		if(nodeValue < *crt){
-			if(crt->fHasLeftChild()){
-				crt = crt->getLeftChild();
-				continue;
-			}
-			else{
-				crt->setLeftChild(new_node = new CBsTNode(value, crt));
-				break;
-			}
-		}
-		if(nodeValue == *crt){
-			new_node = nullptr;
-			break;
 		}
 	}
 	return new_node;
 }
 
-static CBsTNode* removeNode(CBsTNode* root, value_type& value){
+static CBsTNode* removeNodeByValue(CBsTNode* root, value_type& value){
 	return removeNode(findNode(root, value));
 }
 
-static CBsTNode* removeNode(CBsTNode* root, CBsTNode* node_pointer){
+// return new root of the tree
+static CBsTNode* removeNodeByPointer(CBsTNode* root, CBsTNode* node_pointer){
 	CBsTNode* removable, *next, *parent;
 	bool fLeft;
 	
@@ -157,7 +161,7 @@ static CBsTNode* removeNode(CBsTNode* root, CBsTNode* node_pointer){
 		else{
 			next = findNextNode(root, removable);
 			value_type val = next->getValue();
-			root = removeNode(root, next);
+			root = removeNodeByPointer(root, next);
 			removable->setValue(val);
 		}
 	}
