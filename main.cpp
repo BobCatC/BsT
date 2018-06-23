@@ -3,6 +3,7 @@
 
 
 #include "CBsT.hpp"
+
 using namespace std;
 
 int main(){
@@ -33,7 +34,6 @@ int main(){
 		cout << *it << endl;
 	}
 	
-	bst.clear();
 	bst.insert(1);
 	bst.remove(1);
 	bst.begin();
@@ -45,7 +45,8 @@ int main(){
 	bst.empty();
 	bst.size();
 	bst.find(1);
-	
+	bst.clear();
+
     return 0;
 }
 
