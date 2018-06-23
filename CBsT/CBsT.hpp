@@ -1,14 +1,9 @@
 /*				CBsT.hpp
  *		This is the main file of BST
- *
- *
- *
-*/
-
+ */
 
 #ifndef CBsT_hpp
 #define CBsT_hpp
-#include <functional>
 #include <queue>
 #include <iostream>
 
@@ -32,44 +27,24 @@ public:
 	CBsT(const CBsT& bst) { _root = copyTree(bst._root, nullptr); }
 	~CBsT() { freeMemOfTree(_root); }
 	
-	static void printPreorderDF(CBsTNode* v)  {
-		if(v == nullptr)
-			return;
-		std::cout << v->getValue() << ' ';
-		printPreorderDF(v->getLeftChild());
-		printPreorderDF(v->getRightChild());
-	}
-	
-	static void printInorderDF(CBsTNode* v)  {
-		if(v == nullptr)
-			return;
-		printInorderDF(v->getLeftChild());
-		std::cout << v->getValue() << ' ';
-		printInorderDF(v->getRightChild());
-	}
-	
-	static void printPostorderDF(CBsTNode* v)  {
-		if(v == nullptr)
-			return;
-		printPostorderDF(v->getLeftChild());
-		printPostorderDF(v->getRightChild());
-		std::cout << v->getValue() << ' ';
-	}
-	
 	
 	const_iterator begin() const {
 		CBsTNode* crt;
 		crt = findMin(_root);
 		return const_iterator(_root, crt, false, crt == nullptr ? true : false);
 	}
+	
 	iteratorInorderDF beginInorderDF() const { return iteratorInorderDF(_root); }
 	iteratorPreorderDF beginPreorderDF() const { return iteratorPreorderDF(_root); }
 	iteratorPostorderDF beginPostorderDF() const { return iteratorPostorderDF(_root); }
 	iteratorBF beginBF() const { return iteratorBF(_root); }
 	
+	// END iterator is usable for ALL times of iterators
+	// (both usual and traversal iterators)
 	const_iterator end() const {
 		return const_iterator(_root, nullptr, false, true);
 	}
+	
 	
 	const_iterator insert(const value_type& value) {
 		CBsTNode* node = findNode(_root, value);
@@ -82,6 +57,7 @@ public:
 		}
 		return const_iterator(_root, node);
 	}
+	
 	void remove(const value_type& value){
 		CBsTNode* node = findNode(_root, value);
 		if(node != nullptr){
@@ -89,6 +65,7 @@ public:
 			--_size;
 		}
 	}
+	
 	const_iterator find(const value_type& value) const {
 		bool fFound = true;
 		CBsTNode* crt;
@@ -96,6 +73,7 @@ public:
 		fFound = crt == nullptr ? false : true;
 		return const_iterator(_root, crt, false, !fFound);
 	}
+	
 	void clear() {
 		freeMemOfTree(_root);
 		_root = nullptr;
@@ -105,7 +83,6 @@ public:
 	
 	bool empty() const { return (_size == 0); }
 	size_t size() const { return (_size); }
-	CBsTNode* getRoot() const { return _root; }
 
 private:
 	CBsTNode* _root;

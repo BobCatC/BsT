@@ -301,5 +301,6 @@ public:
 	}
 };
 
+#undef crt_node
 
 #endif /* CBsTTraversalIterators_h */

@@ -44,7 +44,9 @@ public:
 	
 	bool operator<(const CBsTNode& other) { return ((*this <= other) && (*this != other)); }
 	bool operator>=(const CBsTNode& other) { return !(*this < other); }
+	
 private:
+	
 	value_type _value;
 	
 	CBsTNode* _parent_pointer;
